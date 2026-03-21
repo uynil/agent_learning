@@ -79,8 +79,8 @@ learning-workflow.md
    +--> session-close-checklist.md
    +--> prompt-smoke-cases.md
    +--> research-index.md
-   +--> docs/01-projects/<project>/README.md
-   +--> docs/02-comparisons/*
+   +--> docs/research/projects/<project>/README.md
+   +--> docs/research/comparisons/*
 ```
 
 ## Documentation Rules
@@ -91,6 +91,15 @@ Every research note should clearly separate:
 - `Inferences`: conclusions derived from the observed facts
 - `Open Questions`: missing information or uncertain parts
 - `Improvement Ideas`: future research or design opportunities
+
+Agent project findings belong in `docs/research/`, especially:
+
+- `docs/research/projects/*`
+- `docs/research/comparisons/*`
+
+Learning-system rules do not belong in project notes.
+
+Learning-system workflow, prompts, evaluation, methodology, and templates belong in `docs/system/*`.
 
 ## Update Rules
 
@@ -105,7 +114,7 @@ When editing a project note:
 
 Each project uses one canonical entry page:
 
-- `docs/01-projects/<project>/README.md`
+- `docs/research/projects/<project>/README.md`
 
 Additional project docs are optional and should only be added when needed:
 
@@ -122,16 +131,21 @@ Expected on most sessions:
 
 - project `README.md`
 - project deep-dive notes, if the session reached that level
-- `docs/00-system/prompt-iteration-log.md`
+- `docs/system/prompts/prompt-iteration-log.md`
 
 ### Low-Frequency
 
 Only update when there is enough evidence:
 
 - `AGENTS.md`
-- `docs/02-comparisons/*`
-- `docs/00-system/prompt-smoke-cases.md`
-- `docs/00-system/research-index.md`
+- `docs/research/comparisons/*`
+- `docs/system/prompts/prompt-smoke-cases.md`
+- `docs/system/workflow/research-index.md`
+
+Use this split:
+
+- learning-system experience -> `AGENTS.md`
+- agent design / architecture / orchestration / prompt findings -> `docs/research/projects/*` or `docs/research/comparisons/*`
 
 ## Blocked or Low-Confidence Sessions
 
@@ -148,6 +162,13 @@ Do not let failed exploration disappear.
 ## Session Close
 
 Every research round should end with the checklist in [session-close-checklist.md](./session-close-checklist.md).
+
+At close-out, explicitly decide whether a lesson is:
+
+- a learning-system lesson
+- a project-specific or cross-project agent lesson
+
+Do not mix those destinations.
 
 ## Research Exit Criteria
 

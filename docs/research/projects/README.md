@@ -1,6 +1,8 @@
 # Project Notes
 
-This folder stores one subdirectory per example project.
+This folder stores project-specific research outputs.
+
+It does not store workflow rules, prompt library rules, or system-level evaluation criteria. Those belong in [docs/system](/Users/uynil/projects/agents/docs/system).
 
 Each project folder uses `README.md` as its canonical entry page.
 

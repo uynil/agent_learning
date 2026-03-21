@@ -27,7 +27,7 @@ The initial follow-up items from the first plan review were completed and are ke
 
 It should likely live alongside the workflow docs instead of becoming a competing process definition.
 
-**Depends on / blocked by:** Depends on the workflow source-of-truth decision staying in `docs/00-system/learning-workflow.md`. Not blocked by code or project research.
+**Depends on / blocked by:** Depends on the workflow source-of-truth decision staying in `docs/system/workflow/learning-workflow.md`. Not blocked by code or project research.
 
 ## 2. Add Prompt Smoke Cases
 
@@ -67,6 +67,6 @@ It should likely live alongside the workflow docs instead of becoming a competin
 - adds an extra navigation document to maintain
 - will decay if it is not updated when notes grow
 
-**Context:** This should be a thin navigation layer, not a replacement for `docs/02-comparisons/`. A good initial location would be `docs/00-system/research-index.md` or `docs/02-comparisons/index.md`.
+**Context:** This should be a thin navigation layer, not a replacement for `docs/research/comparisons/`. A good initial location is `docs/system/workflow/research-index.md`.
 
 **Depends on / blocked by:** Depends on project notes gradually becoming richer. Not blocked by any code changes.

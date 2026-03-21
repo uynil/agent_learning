@@ -23,11 +23,10 @@
   研究系统的主目录。
 
   主要分层如下：
-  - [docs/00-system](/Users/uynil/projects/agents/docs/00-system)
-  - [docs/01-projects](/Users/uynil/projects/agents/docs/01-projects)
-  - [docs/02-comparisons](/Users/uynil/projects/agents/docs/02-comparisons)
-  - [docs/03-methodology](/Users/uynil/projects/agents/docs/03-methodology)
-  - [docs/templates](/Users/uynil/projects/agents/docs/templates)
+  - [docs/system](/Users/uynil/projects/agents/docs/system)
+    学习系统本身的文件：流程、prompts、评估、方法、模板
+  - [docs/research](/Users/uynil/projects/agents/docs/research)
+    具体 agent 项目的研究产出：单项目笔记与横向比较
 
 ### 执行规则
 
@@ -38,23 +37,38 @@
 
 - [README.md](/Users/uynil/projects/agents/README.md)
   给人看的入口，只说明仓库是什么、去哪里看、怎么开始。
+  不记录具体 agent 项目的设计经验。
 
-- [learning-workflow.md](/Users/uynil/projects/agents/docs/00-system/learning-workflow.md)
+- [docs/system/README.md](/Users/uynil/projects/agents/docs/system/README.md)
+  学习系统文件导航。
+
+- [docs/research/README.md](/Users/uynil/projects/agents/docs/research/README.md)
+  agent 项目研究文档导航。
+
+- [learning-workflow.md](/Users/uynil/projects/agents/docs/system/workflow/learning-workflow.md)
   研究流程的唯一真相源。
 
 - [AGENTS.md](/Users/uynil/projects/agents/AGENTS.md)
-  执行规则、更新边界、经验晋升门槛、失败记录规则。
+  学习系统本身的执行规则、更新边界、经验晋升门槛、失败记录规则。
+  不记录具体 agent 项目的架构或设计结论。
 
-- [prompt-library.md](/Users/uynil/projects/agents/docs/00-system/prompt-library.md)
+- [prompt-library.md](/Users/uynil/projects/agents/docs/system/prompts/prompt-library.md)
   可直接使用的研究 prompts。
+
+- `docs/research/projects/*` 与 `docs/research/comparisons/*`
+  记录具体 agent 项目的架构、调度、prompt 设计和横向比较结论。
+
+- `docs/system/*`
+  只记录学习系统本身如何运作，不记录具体 agent 项目的设计结论。
 
 ## 推荐开始方式
 
 1. 阅读 [docs/README.md](/Users/uynil/projects/agents/docs/README.md)
-2. 阅读 [learning-workflow.md](/Users/uynil/projects/agents/docs/00-system/learning-workflow.md)
-3. 阅读 [AGENTS.md](/Users/uynil/projects/agents/AGENTS.md)
-4. 选一个项目开始
-5. 用 [prompt-library.md](/Users/uynil/projects/agents/docs/00-system/prompt-library.md) 开始第一轮研究
+2. 阅读 [docs/system/README.md](/Users/uynil/projects/agents/docs/system/README.md)
+3. 阅读 [learning-workflow.md](/Users/uynil/projects/agents/docs/system/workflow/learning-workflow.md)
+4. 阅读 [AGENTS.md](/Users/uynil/projects/agents/AGENTS.md)
+5. 选一个项目开始
+6. 用 [prompt-library.md](/Users/uynil/projects/agents/docs/system/prompts/prompt-library.md) 开始第一轮研究
 
 ## 当前状态
 

@@ -1,34 +1,30 @@
 # Agents Research Docs
 
-This directory stores the learning system for studying open-source agent projects in this repository.
+这个目录现在明确分成两类内容：
 
-## Structure
+- [system](/Users/uynil/projects/agents/docs/system)
+  学习系统本身的文件。
+  包括流程、prompt 套件、评估规则、方法、模板。
+- [research](/Users/uynil/projects/agents/docs/research)
+  具体 agent 项目的研究产出。
+  包括单项目笔记和跨项目比较。
 
-- `00-system/`: workflow, prompts, checklists, evaluation rules, and prompt iteration history
-- `01-projects/`: one folder per project, with `README.md` as the canonical project entry page
-- `02-comparisons/`: cross-project comparison docs
-- `03-methodology/`: reusable methods for reading agent systems
-- `templates/`: reusable document templates
+## 如何判断该写到哪里
 
-## Current Scope
+- 如果你在更新“这套学习系统怎么工作更稳”，写到 `docs/system/*`
+- 如果你在总结“某个 agent 项目是怎么设计的”，写到 `docs/research/*`
 
-The documentation system is initialized first. Detailed project research has not started yet.
+不要把这两类内容混在同一份文档里。
 
-Current example projects under `examples/`:
+## 快速入口
 
-- `BettaFish`
-- `DeepSearchAgent-Demo`
-- `MiroFish`
-- `autoresearch`
-- `chatwoot`
-- `everything-claude-code`
-- `gpt-researcher`
+- [docs/system/README.md](/Users/uynil/projects/agents/docs/system/README.md)
+  学习系统文件导航。
+- [docs/research/README.md](/Users/uynil/projects/agents/docs/research/README.md)
+  agent 项目研究文档导航。
+- [learning-workflow.md](/Users/uynil/projects/agents/docs/system/workflow/learning-workflow.md)
+  研究流程唯一真相源。
 
-## Recommended Workflow
+## 当前状态
 
-1. Read [00-system/learning-workflow.md](./00-system/learning-workflow.md)
-2. Use [00-system/prompt-library.md](./00-system/prompt-library.md)
-3. Write or update `01-projects/<project>/README.md`
-4. Record prompt quality updates in [00-system/prompt-iteration-log.md](./00-system/prompt-iteration-log.md)
-5. Use [00-system/session-close-checklist.md](./00-system/session-close-checklist.md)
-6. Promote stable findings into comparisons, indexes, or `AGENTS.md` only when thresholds are met
+文档系统已经初始化完成，研究输出区也已经建好骨架，但具体项目的系统性研究还没有正式开始。

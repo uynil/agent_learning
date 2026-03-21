@@ -7,7 +7,7 @@ Use this checklist at the end of every research round.
 - The correct project `README.md` was updated
 - New facts are separated from inferences
 - `status`, `last_updated`, and `next_action` are current
-- `docs/00-system/prompt-iteration-log.md` was updated if prompts were used
+- `docs/system/prompts/prompt-iteration-log.md` was updated if prompts were used
 
 ## If the Session Went Deep
 
@@ -26,9 +26,16 @@ Use this checklist at the end of every research round.
 Only update these if the evidence threshold is met:
 
 - `AGENTS.md`
-- `docs/02-comparisons/*`
-- `docs/00-system/prompt-smoke-cases.md`
-- `docs/00-system/research-index.md`
+- `docs/research/comparisons/*`
+- `docs/system/prompts/prompt-smoke-cases.md`
+- `docs/system/workflow/research-index.md`
+
+Before promoting anything, ask:
+
+- Is this a lesson about the learning system itself?
+  - yes -> maybe `AGENTS.md`
+- Is this a lesson about agent architecture, orchestration, prompts, or project design?
+  - yes -> it belongs in `docs/research/projects/*` or `docs/research/comparisons/*`
 
 ## Final Question
 
@@ -39,4 +46,3 @@ If you came back to this repository in two weeks, would you know:
 - where to resume next
 
 If the answer is no, the session is not closed yet.
-
