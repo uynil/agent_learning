@@ -9,11 +9,11 @@ next_action: quick scan
 
 # BettaFish
 
-This folder is reserved for future research notes on `examples/BettaFish`.
+This file is the canonical entry page for future research notes on `examples/BettaFish`.
 
 Planned files:
 
-- `project-overview.md`
+- `README.md`
 - `architecture.md`
 - `llm-orchestration.md`
 - `prompts-analysis.md`

@@ -2,9 +2,11 @@
 
 This folder stores one subdirectory per example project.
 
-Each project folder starts as a placeholder and will later hold:
+Each project folder uses `README.md` as its canonical entry page.
 
-- `project-overview.md`
+Additional files are optional and should only be created when the research depth requires them:
+
+- `README.md`
 - `architecture.md`
 - `llm-orchestration.md`
 - `prompts-analysis.md`
@@ -21,4 +23,3 @@ Each project folder starts as a placeholder and will later hold:
 | chatwoot | not-started | quick scan |
 | everything-claude-code | not-started | quick scan |
 | gpt-researcher | not-started | quick scan |
-

@@ -10,5 +10,12 @@
 
 ## Linked Comparisons
 
-## Next Research Plan
+## Blocked or Low-Confidence Record
 
+- Status:
+- Files Checked:
+- Blocker:
+- Working Hypothesis:
+- Resume From:
+
+## Next Research Plan

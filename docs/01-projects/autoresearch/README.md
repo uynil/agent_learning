@@ -9,11 +9,11 @@ next_action: quick scan
 
 # autoresearch
 
-This folder is reserved for future research notes on `examples/autoresearch`.
+This file is the canonical entry page for future research notes on `examples/autoresearch`.
 
 Planned files:
 
-- `project-overview.md`
+- `README.md`
 - `architecture.md`
 - `llm-orchestration.md`
 - `prompts-analysis.md`

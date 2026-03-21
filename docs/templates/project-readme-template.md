@@ -7,7 +7,7 @@ last_updated:
 next_action:
 ---
 
-# Project Overview Template
+# Project README Template
 
 ## Project Summary
 
@@ -15,8 +15,19 @@ next_action:
 
 ## Key Files
 
+## Current Status
+
+## Next Action
+
 ## Observed Facts
 
 ## Inferences
 
 ## Open Questions
+
+## Blocked or Low-Confidence Record
+
+- Files Checked:
+- Current Blocker:
+- Working Hypothesis:
+- Resume From:

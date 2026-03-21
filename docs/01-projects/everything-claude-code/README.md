@@ -9,11 +9,11 @@ next_action: quick scan
 
 # everything-claude-code
 
-This folder is reserved for future research notes on `examples/everything-claude-code`.
+This file is the canonical entry page for future research notes on `examples/everything-claude-code`.
 
 Planned files:
 
-- `project-overview.md`
+- `README.md`
 - `architecture.md`
 - `llm-orchestration.md`
 - `prompts-analysis.md`

@@ -1,5 +1,7 @@
 # Learning Workflow
 
+This file is the single source of truth for the research workflow.
+
 ## Goal
 
 Build a reusable research workflow for understanding open-source agent projects from four angles:
@@ -47,7 +49,7 @@ Run Quick Scan
     v
 Decide: stop or go deeper
     |
-    +--> stop -> update project overview only
+    +--> stop -> update project README only
     |
     v
 Run Deep Dive / Prompt Audit
@@ -56,10 +58,29 @@ Run Deep Dive / Prompt Audit
 Update project docs
     |
     v
-Update comparison docs
+Update prompt iteration log
     |
     v
-Update prompt iteration log
+Decide whether any low-frequency docs should change
+```
+
+## Workflow Map
+
+```text
+README.md
+   |
+   v
+docs/README.md
+   |
+   v
+learning-workflow.md
+   |
+   +--> prompt-library.md
+   +--> session-close-checklist.md
+   +--> prompt-smoke-cases.md
+   +--> research-index.md
+   +--> docs/01-projects/<project>/README.md
+   +--> docs/02-comparisons/*
 ```
 
 ## Documentation Rules
@@ -80,6 +101,54 @@ When editing a project note:
 3. Keep uncertain conclusions in `Open Questions`
 4. Add a concrete `next_action`
 
+## Project Output Rules
+
+Each project uses one canonical entry page:
+
+- `docs/01-projects/<project>/README.md`
+
+Additional project docs are optional and should only be added when needed:
+
+- `architecture.md`
+- `llm-orchestration.md`
+- `prompts-analysis.md`
+- `notes.md`
+
+## High-Frequency and Low-Frequency Updates
+
+### High-Frequency
+
+Expected on most sessions:
+
+- project `README.md`
+- project deep-dive notes, if the session reached that level
+- `docs/00-system/prompt-iteration-log.md`
+
+### Low-Frequency
+
+Only update when there is enough evidence:
+
+- `AGENTS.md`
+- `docs/02-comparisons/*`
+- `docs/00-system/prompt-smoke-cases.md`
+- `docs/00-system/research-index.md`
+
+## Blocked or Low-Confidence Sessions
+
+A blocked session still counts as research output if it records:
+
+- current status
+- files already checked
+- blocker
+- working hypothesis
+- next resume point
+
+Do not let failed exploration disappear.
+
+## Session Close
+
+Every research round should end with the checklist in [session-close-checklist.md](./session-close-checklist.md).
+
 ## Research Exit Criteria
 
 A project study session is useful when it leaves behind at least one of these:
@@ -88,4 +157,3 @@ A project study session is useful when it leaves behind at least one of these:
 - a better prompt pattern
 - a stronger comparison point
 - a sharper open question for the next round
-

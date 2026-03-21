@@ -4,8 +4,8 @@ This directory stores the learning system for studying open-source agent project
 
 ## Structure
 
-- `00-system/`: workflow, prompts, evaluation rules, and prompt iteration history
-- `01-projects/`: one folder per project, used for future project-specific research notes
+- `00-system/`: workflow, prompts, checklists, evaluation rules, and prompt iteration history
+- `01-projects/`: one folder per project, with `README.md` as the canonical project entry page
 - `02-comparisons/`: cross-project comparison docs
 - `03-methodology/`: reusable methods for reading agent systems
 - `templates/`: reusable document templates
@@ -27,8 +27,8 @@ Current example projects under `examples/`:
 ## Recommended Workflow
 
 1. Read [00-system/learning-workflow.md](./00-system/learning-workflow.md)
-2. Pick a prompt from [00-system/prompt-library.md](./00-system/prompt-library.md)
-3. Create or update notes in `01-projects/<project>/`
-4. Sync reusable findings into `02-comparisons/`
-5. Record prompt quality updates in `00-system/prompt-iteration-log.md`
-
+2. Use [00-system/prompt-library.md](./00-system/prompt-library.md)
+3. Write or update `01-projects/<project>/README.md`
+4. Record prompt quality updates in [00-system/prompt-iteration-log.md](./00-system/prompt-iteration-log.md)
+5. Use [00-system/session-close-checklist.md](./00-system/session-close-checklist.md)
+6. Promote stable findings into comparisons, indexes, or `AGENTS.md` only when thresholds are met

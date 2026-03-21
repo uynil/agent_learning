@@ -191,4 +191,4 @@ Writing style:
 - Use `Architecture Prompt` and `LLM Orchestration Prompt` for deeper study
 - Use `Prompt Audit Prompt` when the project has interesting prompt design
 - End with `Doc Refine Prompt`
-
+- Re-check key prompts against [prompt-smoke-cases.md](./prompt-smoke-cases.md) after meaningful prompt edits

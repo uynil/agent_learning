@@ -9,11 +9,11 @@ next_action: quick scan
 
 # DeepSearchAgent-Demo
 
-This folder is reserved for future research notes on `examples/DeepSearchAgent-Demo`.
+This file is the canonical entry page for future research notes on `examples/DeepSearchAgent-Demo`.
 
 Planned files:
 
-- `project-overview.md`
+- `README.md`
 - `architecture.md`
 - `llm-orchestration.md`
 - `prompts-analysis.md`
