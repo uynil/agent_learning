@@ -4,6 +4,8 @@
 
 ## Scheduling Pattern
 
+## Context Handoff
+
 ## Structured Output Strategy
 
 ## Reliability Mechanisms
@@ -13,4 +15,3 @@
 ## Limitations
 
 ## Questions for Further Research
-

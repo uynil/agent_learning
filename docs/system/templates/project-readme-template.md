@@ -17,6 +17,10 @@ next_action:
 
 ## Current Status
 
+## Current Research Themes
+
+## Key Research Questions
+
 ## Next Action
 
 ## Observed Facts

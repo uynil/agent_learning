@@ -2,7 +2,7 @@
 
 ## Goal
 
-Understand how a project coordinates model calls, tools, intermediate state, and retries.
+Understand how a project coordinates model calls, tools, intermediate state, context handoff, and retries.
 
 ## Checklist
 
@@ -12,13 +12,15 @@ Understand how a project coordinates model calls, tools, intermediate state, and
 4. identify iteration or reflection loops
 5. identify structure enforcement
 6. identify retry or fallback paths
-7. identify where the orchestration leaks into prompts
+7. identify how context is passed between calls or rounds
+8. identify where the orchestration leaks into prompts
 
 ## Core Questions
 
 - Which stage plans the work?
 - Which stage executes the work?
 - Which stage judges or revises the work?
+- How does context move from one call to the next?
 - What happens when outputs are malformed?
 - What happens when search or tool data is missing?
 - Is the orchestration easy to extend?
@@ -27,8 +29,8 @@ Understand how a project coordinates model calls, tools, intermediate state, and
 
 - LLM Call Map
 - Scheduling Pattern
+- Context Handoff
 - Reliability Mechanisms
 - Tradeoffs
 - Failure Modes
 - Open Questions
-

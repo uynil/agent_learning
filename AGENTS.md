@@ -63,6 +63,8 @@
 
 - `architecture.md`
 - `llm-orchestration.md`
+- `context-management.md`
+- `deep-research-mode.md`
 - `prompts-analysis.md`
 - `notes.md`
 

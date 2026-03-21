@@ -118,8 +118,10 @@ When evaluating prompt changes with smoke cases:
 ```text
 - Project:
 - Mode:
+- Primary Theme:
 - Prompt(s):
 - Deep or shallow session:
+- Was Deep Research Mode used?:
 - Was the session blocked or low-confidence?:
 
 Scores:
@@ -136,6 +138,7 @@ Checklist:
 - Session-close checklist passed?:
 - Correct project README updated?:
 - Prompt iteration log updated?:
+- Round summary written?:
 - Failure record needed?:
 - Failure record written?:
 

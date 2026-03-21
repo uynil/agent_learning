@@ -99,6 +99,79 @@ The first goal is not maximum sophistication. The first goal is to create a stab
 - after the first 2-3 real project studies, the strongest next improvement will likely be refining the smoke cases and tightening the `AGENTS.md` promotion criteria
 - once real project notes exist, the topic index should reveal whether current comparison dimensions are enough or still too abstract
 
+## Version: v1.2
+
+- Date: 2026-03-21
+- Scope: extending the research system for prompt structure, context management, and deep research loops
+- Status: active
+
+### What changed
+
+- expanded prompt research from reliability-only concerns into:
+  - prompt function
+  - prompt structure
+  - core prompt elements
+  - function-to-mechanism mapping
+  - prompt composition
+  - prompt-to-code coupling
+  - reliability and failure modes
+- added `Context Management Audit` and `Deep Research Mode` to the workflow
+- added new prompts:
+  - `Context Management Prompt`
+  - `Deep Research Prompt`
+  - `Question Rewrite Prompt`
+  - `Round Summary Prompt`
+- added new methodology docs:
+  - `how-to-analyze-context-management.md`
+  - `how-to-analyze-deep-research-mode.md`
+- updated templates, checklist, research index, and smoke cases to match the new themes
+
+### What improved
+
+- the system can now study how other agents handle long context, memory, retrieval, and resumable research loops
+- deep research is now treated as an explicit operating mode instead of an informal "keep going" behavior
+- prompt analysis is less likely to stay shallow because function, structure, core elements, and function-to-mechanism mapping are now first-class questions
+- multi-round sessions now have a clearer requirement for rewritten questions and resumable summaries
+
+### What got worse
+
+- the prompt system is larger and slightly harder to memorize
+- there are now more optional research paths, which raises the importance of choosing one primary theme per round
+- the workflow relies more on disciplined round summaries when a session goes deep
+
+### Evidence from actual use
+
+- the design discussion exposed that "prompt reliability" was too narrow and would miss prompt structure, core elements, and composition patterns
+- the follow-up discussion exposed a second blind spot: even with better structural analysis, the system still needed an explicit way to explain how a prompt actually produces its intended behavior
+- the request to study "how other agents implement deep research" showed that the old workflow lacked explicit support for query rewrite and multi-round investigation
+- the earlier workflow also did not force a resumable round summary, which would make deep sessions harder to continue later
+
+### Modification learnings
+
+- prompt research needs both static analysis and systems analysis:
+  - static analysis for structure and core elements
+  - systems analysis for composition, coupling, and runtime behavior
+- prompt analysis also needs function-to-mechanism mapping:
+  - what the prompt is trying to achieve
+  - which prompt element likely carries that effect
+  - how that element cooperates with orchestration code
+- context management deserves its own lens and should not be hidden inside generic orchestration notes
+- deep research mode works better as a loop with explicit question rewriting than as an unbounded long-form analysis prompt
+
+### Testing learnings
+
+- smoke cases must cover more than quick scan and prompt reliability; they also need:
+  - context-heavy projects
+  - deep-research projects
+  - resumable round summaries
+- session-close checks need a deep-research branch, otherwise multi-round work will drift or become hard to resume
+- template changes matter for testing because the workflow fails silently when new prompt capabilities have nowhere structured to land
+
+### Next hypothesis
+
+- after the first real deep-research project, the next likely refinement will be tightening the stop conditions for when to end a round versus continue one more pass
+- prompt audit may later need a smaller "prompt structure only" variant if the full prompt audit becomes too heavy for quick sessions
+
 ## Iteration Template
 
 Copy this block for future updates:

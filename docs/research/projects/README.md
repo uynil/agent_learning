@@ -11,6 +11,8 @@ Additional files are optional and should only be created when the research depth
 - `README.md`
 - `architecture.md`
 - `llm-orchestration.md`
+- `context-management.md`
+- `deep-research-mode.md`
 - `prompts-analysis.md`
 - `notes.md`
 

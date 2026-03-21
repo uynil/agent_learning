@@ -28,10 +28,31 @@ The goal is not exhaustive evaluation. The goal is a stable manual regression ba
 - Prompt path: `Prompt Audit Prompt`
 - Expected qualities:
   - inventories prompt locations
+  - explains what important prompts are trying to achieve
+  - explains prompt structure and core elements
+  - explains which prompt elements implement those functions
   - explains prompt-to-code coupling
   - identifies likely failure modes
 
-## Case 4: Cross-Project Comparison
+## Case 4: Context-Heavy Project
+
+- Target: a project with memory, retrieval, summaries, or long-context handling
+- Prompt path: `Context Management Prompt`
+- Expected qualities:
+  - identifies the main context sources
+  - explains how context is selected or packed
+  - calls out likely stale-context or overload risks
+
+## Case 5: Deep Research Project
+
+- Target: a project that appears to rewrite questions or investigate across multiple rounds
+- Prompt path: `Question Rewrite Prompt` + `Deep Research Prompt` + `Round Summary Prompt`
+- Expected qualities:
+  - sharpens the broad question into useful subquestions
+  - identifies the research loop clearly
+  - leaves behind a resumable round summary
+
+## Case 6: Cross-Project Comparison
 
 - Target: two projects with clearly different orchestration styles
 - Prompt path: `Master Prompt` -> `Cross Project Compare`
@@ -40,7 +61,7 @@ The goal is not exhaustive evaluation. The goal is a stable manual regression ba
   - names tradeoffs
   - cites evidence from both projects
 
-## Case 5: Blocked Research Session
+## Case 7: Blocked Research Session
 
 - Target: a messy or low-signal project
 - Prompt path: `Quick Scan Prompt` + `Doc Refine Prompt`
@@ -54,4 +75,3 @@ The goal is not exhaustive evaluation. The goal is a stable manual regression ba
 For each smoke case, score output using [evaluation-rubric.md](./evaluation-rubric.md).
 
 If a prompt change makes two or more smoke cases materially worse, do not promote the change into stable workflow guidance yet.
-

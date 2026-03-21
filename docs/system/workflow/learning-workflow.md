@@ -4,12 +4,27 @@ This file is the single source of truth for the research workflow.
 
 ## Goal
 
-Build a reusable research workflow for understanding open-source agent projects from four angles:
+Build a reusable research workflow for understanding open-source agent projects from several connected angles:
 
 - architecture design
 - LLM orchestration and scheduling
-- prompt design and usage
+- prompt structure, core elements, organization, and usage
+- context management, memory, and retrieval strategy
+- deep research loops such as question rewrite, decomposition, and evidence accumulation
 - reusable lessons for future projects
+
+## Core Research Themes
+
+Use the workflow to study these themes explicitly, not only the main execution path:
+
+- architecture and module boundaries
+- orchestration and role splits
+- prompt structure and core elements
+- prompt function-to-mechanism mapping and how prompts implement specific functions
+- prompt reliability and failure modes
+- context management and memory strategy
+- deep research mode and multi-round investigation design
+- evaluation and stopping conditions
 
 ## Research Modes
 
@@ -26,15 +41,23 @@ Use this first to answer:
 
 Use this when a project is worth detailed study. Focus on execution flow, state transitions, tool use, and prompt-to-code coupling.
 
-### 3. Cross Project Compare
+### 3. Prompt Audit
+
+Use this when the main target is understanding prompt design, prompt structure, output constraints, prompt layout, and prompt failure modes.
+
+### 4. Context Management Audit
+
+Use this when the main target is understanding how a project manages memory, retrieval, context packing, summaries, and state handoff across steps or rounds.
+
+### 5. Deep Research Mode
+
+Use this when the project appears to support broad-question investigation through query rewrite, decomposition, search-read-synthesize loops, reflection, or iterative summarization.
+
+### 6. Cross Project Compare
 
 Use this after at least two projects have notes. Focus on recurring patterns, differences, tradeoffs, and reusable abstractions.
 
-### 4. Prompt Audit
-
-Use this when the main target is understanding prompt design, output constraints, prompt layout, and prompt failure modes.
-
-### 5. Doc Refine
+### 7. Doc Refine
 
 Use this after a study session to turn raw notes into stable docs that can be updated later.
 
@@ -47,12 +70,18 @@ Select project
 Run Quick Scan
     |
     v
-Decide: stop or go deeper
+Choose primary research theme
     |
-    +--> stop -> update project README only
+    +--> stop early -> update project README only
+    |
+    +--> Prompt Audit
+    |
+    +--> Context Management Audit
+    |
+    +--> Deep Research Mode
     |
     v
-Run Deep Dive / Prompt Audit
+Run Deep Dive / focused audit
     |
     v
 Update project docs
@@ -62,6 +91,29 @@ Update prompt iteration log
     |
     v
 Decide whether any low-frequency docs should change
+```
+
+## Deep Research Loop
+
+When the project is complex or the main question is still too broad, use a round-based loop instead of one long pass.
+
+```text
+Start with one broad research question
+    |
+    v
+Rewrite it into a sharper question
+    |
+    v
+Pick the smallest useful file set
+    |
+    v
+Extract evidence, contradictions, and gaps
+    |
+    v
+Write a round summary and resumable context
+    |
+    v
+Decide: stop, continue, or pivot
 ```
 
 ## Workflow Map
@@ -101,6 +153,36 @@ Learning-system rules do not belong in project notes.
 
 Learning-system workflow, prompts, evaluation, methodology, and templates belong in `docs/system/*`.
 
+## Context Management Rules
+
+When studying a project with long flows or multiple rounds, keep the working context deliberately small.
+
+- keep one active research question per round
+- keep a short list of files checked in the current round
+- preserve concrete evidence, not whole transcripts
+- maintain a resumable context summary instead of carrying raw chat history
+- record terminology, state objects, and unresolved gaps that the next round must inherit
+
+Treat context management itself as a research topic:
+
+- what enters each model call
+- what survives across steps or rounds
+- what is summarized, retrieved, cached, or dropped
+- what failure modes come from context overload or context loss
+
+## Deep Research Output Rules
+
+If a session enters `Deep Research Mode`, each round should leave behind:
+
+- current core question
+- rewritten research question
+- files checked in this round
+- observed facts
+- current hypothesis
+- disconfirmed ideas, if any
+- next round question
+- resumable context summary
+
 ## Update Rules
 
 When editing a project note:
@@ -120,8 +202,12 @@ Additional project docs are optional and should only be added when needed:
 
 - `architecture.md`
 - `llm-orchestration.md`
+- `context-management.md`
+- `deep-research-mode.md`
 - `prompts-analysis.md`
 - `notes.md`
+
+Use `notes.md` for round summaries when the session spans multiple questions or multiple passes.
 
 ## High-Frequency and Low-Frequency Updates
 

@@ -11,8 +11,15 @@ Use this checklist at the end of every research round.
 
 ## If the Session Went Deep
 
-- `architecture.md`, `llm-orchestration.md`, `prompts-analysis.md`, or `notes.md` were updated as needed
+- `architecture.md`, `llm-orchestration.md`, `context-management.md`, `deep-research-mode.md`, `prompts-analysis.md`, or `notes.md` were updated as needed
 - the project `README.md` still works as the canonical summary page
+
+## If Deep Research Mode Was Used
+
+- the round summary was recorded
+- the rewritten question is visible
+- the next round question is explicit
+- a resumable context summary was left behind
 
 ## If the Session Was Blocked or Low Confidence
 

@@ -10,6 +10,18 @@
 
 ## Linked Comparisons
 
+## Deep Research Round Summary
+
+- Core Question:
+- Rewritten Question:
+- Files Checked:
+- Confirmed Facts:
+- Working Hypothesis:
+- Disconfirmed Ideas:
+- Remaining Gaps:
+- Next Round Question:
+- Resumable Context Summary:
+
 ## Blocked or Low-Confidence Record
 
 - Status:

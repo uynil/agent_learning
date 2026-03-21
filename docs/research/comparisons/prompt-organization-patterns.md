@@ -6,8 +6,10 @@ Compare how different projects store, shape, and use prompts.
 
 ## Comparison Dimensions
 
+- function grouping
 - prompt storage location
 - organization style: role-based or stage-based
+- mechanism placement: inline, shared template, or builder
 - coupling with orchestration code
 - output constraint style
 - reflection support
@@ -36,4 +38,3 @@ To be filled later.
 ## Conclusions
 
 To be filled later.
-

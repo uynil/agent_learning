@@ -10,9 +10,9 @@ Avoid random browsing. Build a repeatable path for understanding a new agent pro
 2. project entry point
 3. core agent or workflow files
 4. prompt definitions
-5. state and schema files
+5. state, memory, retrieval, and schema files
 6. tools and integrations
-7. output formatting and reporting layers
+7. output formatting, summarization, and reporting layers
 
 ## Questions to Answer
 
@@ -21,7 +21,9 @@ Avoid random browsing. Build a repeatable path for understanding a new agent pro
 - What is the main control loop?
 - Where is state stored or passed?
 - Where are prompts defined?
+- How is context selected, stored, summarized, or retrieved?
 - How are tools invoked?
+- Does the project support multi-round research or iterative investigation?
 - What must be true for the project to succeed?
 
 ## Evidence Rules
@@ -29,4 +31,3 @@ Avoid random browsing. Build a repeatable path for understanding a new agent pro
 - write down the file path for every important claim
 - distinguish facts from guesses
 - capture open questions early
-
