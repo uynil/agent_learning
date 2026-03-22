@@ -3,7 +3,7 @@ project: deep-rag
 source_path: examples/deep-rag
 status: in-progress
 confidence: medium
-last_updated: 2026-03-21
+last_updated: 2026-03-22
 next_action: finish the static protocol audit between backend SSE output and frontend stream parsing, especially around ReAct marker handling and provider/model controls
 ---
 
@@ -75,6 +75,7 @@ next_action: finish the static protocol audit between backend SSE output and fro
 - The documented `KNOWLEDGE_BASE_PATH` and `KNOWLEDGE_BASE_CHUNKS_PATH` variable names do not match the runtime settings fields actually consumed by the backend.
 - ReAct mode still produces a noisy transport protocol, but the default frontend cleans it up with marker-aware parsing; this means correctness depends on a tight coupling between backend prompt format and client parsing rules.
 - The frontend carries provider and model values through state, but does not actually render selector controls, so the orchestration surface is narrower than the state model suggests.
+- Runtime parameter updates are not uniformly centralized: `backend.main` can rebind its own `settings`, while `LLMProvider` still reads `temperature` and `max_tokens` from `backend.config.settings`, so post-save behavior may diverge by field.
 
 ## Questions for Further Research
 
@@ -84,3 +85,4 @@ next_action: finish the static protocol audit between backend SSE output and fro
 - Should the backend support per-request model overrides rather than provider-only selection?
 - Should the backend or frontend strip ReAct protocol markers before display so the fallback mode feels like a normal answer stream?
 - Should the backend emit a cleaner ReAct-specific event shape so the frontend does not need to infer answer boundaries from `<|Final Answer|>` tags?
+- Should `.env` hot reload recreate settings-dependent singletons so orchestration parameters do not drift across modules after a config edit?

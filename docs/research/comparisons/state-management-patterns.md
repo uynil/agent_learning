@@ -18,7 +18,7 @@ Compare how projects represent state, pass context, and persist intermediate res
 | --- | --- | --- | --- | --- | --- |
 | BettaFish | TBD | TBD | TBD | TBD | not started |
 | DeepSearchAgent-Demo | explicit nested state tree: query, paragraphs, per-paragraph research state | saved JSON snapshots plus in-memory structured objects | `latest_summary` and `search_history` handed from node to node at paragraph scope | manual save/load is available and materially useful | strongest explicit state model among the currently compared research agents |
-| deep-rag | mostly stateless backend flow plus frontend-replayed messages, `summary.txt`, and file-system artifacts | knowledge-base files, summary artifacts, mirrored markdown chunks, and client-side message history | full prior messages are resent by the frontend; tool observations are appended back into the loop | operationally easy to resume if artifacts exist, but weak server-side session recovery | good example of file-backed retrieval with thin server-side memory |
+| deep-rag | mostly stateless backend flow plus frontend-replayed messages, `summary.txt`, file-system artifacts, and a partially split runtime settings state after in-app config edits | knowledge-base files, summary artifacts, mirrored markdown chunks, `.env`, and client-side message history | full prior messages are resent by the frontend; tool observations are appended back into the loop; some runtime config is refreshed through `backend.main` while other modules still hold older settings references | operationally easy to resume if artifacts exist, but weak server-side session recovery and uneven live-config propagation | good example of file-backed retrieval with thin server-side memory and a leaky hot-reload story |
 | LightRAG | single control-plane object over many stores plus workspace-scoped shared-storage substrate | graph store, KV stores, vector stores, cache stores, document-status store, and shared namespace state | query modes and structured retrieval outputs hand off entities, relations, chunks, and references | strong durable state, but recovery semantics depend on many backend/storage components staying consistent | richest runtime state model among the current RAG systems |
 | MiroFish | TBD | TBD | TBD | TBD | not started |
 | MODULAR-RAG-MCP-SERVER | typed contracts plus mostly file-backed operational state around collections and traces | repo-local config, BM25 indexes, vector-store collections, and JSONL traces | per-query retrieval results and traces are produced by rebuilt collection-scoped components | good artifact-level recovery, but bootstrap and launcher drift make "resume by rerun" less clean than the core architecture suggests | retrieval core is modular, but state is still mostly externalized into files and stores |
@@ -40,3 +40,7 @@ Recent RAG comparisons suggest at least three more retrieval-oriented variants:
 - frontend-replayed file-backed runtime state
 - file-backed modular service state
 - shared multi-store runtime state
+
+Recent static analysis of `deep-rag` adds one more wrinkle worth tracking:
+
+- partially split runtime-config state, where `.env` edits may update one settings handle but not every singleton or imported settings reference

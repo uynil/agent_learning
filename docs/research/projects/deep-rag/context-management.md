@@ -3,7 +3,7 @@ project: deep-rag
 source_path: examples/deep-rag
 status: in-progress
 confidence: medium
-last_updated: 2026-03-21
+last_updated: 2026-03-22
 next_action: finish the static context audit around mirrored markdown retrieval, frontend replay, and protocol-specific answer cleanup before deciding whether any more runtime evidence is needed
 ---
 

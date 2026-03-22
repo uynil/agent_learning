@@ -3,7 +3,7 @@ project: deep-rag
 source_path: examples/deep-rag
 status: in-progress
 confidence: medium
-last_updated: 2026-03-21
+last_updated: 2026-03-22
 next_action: reconcile README and frontend claims with the actual markdown-oriented preprocessing pipeline and backend-driven provider/model contract
 ---
 
@@ -63,6 +63,7 @@ The most important architectural decision is to separate "global knowledge under
 - In function-calling mode, tool calls and tool results are appended to `conversation_messages`.
 - In ReAct mode, the raw assistant thought/action text and a synthetic observation user message are appended to `conversation_messages`.
 - In the frontend, raw ReAct content is buffered until `<|Final Answer|>` appears, which means the UI depends on backend marker conventions to display clean answers.
+- Config edits flow through `/api/config`, but the running app currently refreshes `settings` only inside `backend.main`, leaving module-level singletons and imported settings references on potentially older configuration snapshots.
 
 ## Extension Points
 
@@ -82,6 +83,7 @@ The most important architectural decision is to separate "global knowledge under
 - The preprocessing layer is conceptually optional in the README, but architecturally close to mandatory because it is responsible for both the knowledge map and the mirrored retrieval corpus.
 - The frontend stays visually clean in ReAct mode only because client code understands and strips protocol markers, which increases coupling between transport format and UI logic.
 - The provider/model story is only partially wired: values are fetched and carried through state, but the visible UI does not let the user choose them and backend support for per-request model override is incomplete.
+- The in-app config editor is architecturally weaker than it looks because hot reload is split across modules rather than owned by one shared settings registry.
 
 ## Open Questions
 
@@ -91,3 +93,4 @@ The most important architectural decision is to separate "global knowledge under
 - Should config keys for knowledge-base paths be aligned with the actual settings field names?
 - Should the config panel stop hardcoding `localhost:8000` so the frontend can actually be deployed behind a different origin or proxy path?
 - Should the architecture explicitly treat preprocessing outputs as first-class runtime artifacts instead of documenting chunked documents as merely optional?
+- Should config hot reload be centralized in `backend.config` so imported modules and singletons stop drifting apart after `.env` edits?

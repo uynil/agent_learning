@@ -4,7 +4,7 @@ source_path: examples/MiroFish
 status: partially-validated
 confidence: medium
 last_updated: 2026-03-22
-next_action: run one full report generation against a warm simulation and inspect how ReportAgent behaves when graph retrieval and live interviews are both available
+next_action: compare report-selection policies after restart, because `report_id` recovery is strong but `simulation_id` recovery is drifting across partial, failed, and completed reports
 ---
 
 # Notes
@@ -63,6 +63,22 @@ next_action: run one full report generation against a warm simulation and inspec
   - `plan_outline()` plans a short report from graph context
   - `_generate_section_react()` runs bounded section-level research
   - `chat()` reuses the saved report as compressed follow-up context
+- The section loop is a real state machine, not just a loose prompt chain. It carries:
+  - `messages`
+  - `tool_calls_count`
+  - `used_tools`
+  - `conflict_retries`
+  - truncated `previous_sections`
+  - tiny `report_context`
+- `TaskManager` is a singleton in-memory tracker rather than a durable task ledger.
+- `/api/report/generate` creates a daemon thread, so report generation has both:
+  - a process-bound control session
+  - a durable artifact session
+- Report chat is request-scoped and reconstructive:
+  - it reloads saved report markdown by `simulation_id`
+  - it truncates that markdown to 15000 characters
+  - it only keeps the last 10 chat turns
+  - it does not resume section-generation loop state
 - The section loop carries forward previous sections, but only as truncated prose (4000 chars per completed section).
 - The chat surface truncates saved report content to 15000 characters and only keeps the last 10 chat turns.
 - `interview_agents` is not a single primitive call; it:
@@ -73,6 +89,37 @@ next_action: run one full report generation against a warm simulation and inspec
   - cleans response wrappers
   - extracts quotes
   - uses LLM again to summarize the interviews
+- One fully live report run now validates the complete `ReportAgent` path:
+  - `/api/report/generate` returns a real `report_id`
+  - all 3 planned sections complete
+  - `full_report.md` is assembled
+  - `progress.json` reaches `completed`
+  - `agent_log.jsonl` records a full per-section execution trace
+- The validated report run used this real section pattern:
+  - section 1: `panorama_search -> insight_forge -> interview_agents`
+  - section 2: `panorama_search -> insight_forge -> interview_agents -> quick_search`
+  - section 3: `panorama_search -> insight_forge -> interview_agents`
+- In that run, the interview step dominated per-section latency:
+  - section 1 interview: about 57 seconds
+  - section 2 interview: about 54 seconds
+  - section 3 interview: about 48 seconds
+- All 3 section-level interviews looked empty inside the report layer, but raw IPC response files show substantive single-platform answers for those same batch requests.
+- Section 2 showed an additional recovery pattern after an empty interview:
+  - the model used `quick_search`
+  - then produced final section prose
+- Section 2 also revealed that the final-answer contract is softer than the prompt text suggests:
+  - the final model output omitted the `Final Answer:` prefix
+  - the backend still accepted it as final because there was no further tool call
+- `progress.json` lagged behind the true runtime state during long interview waits, while `agent_log.jsonl` stayed current.
+- The final report prose did not carry forward explicit interview transcripts or per-agent quotes, so the report remained graph-dominant despite successful interview transport.
+- The strongest current root-cause candidate is a schema mismatch rather than weak simulation behavior:
+  - single-platform batch interview responses are stored as `{ \"0\": {...}, \"3\": {...} }`
+  - `zep_tools.py` parses batch interview results only as `twitter_{id}` / `reddit_{id}`
+  - the report tool therefore discards real answers and synthesizes placeholder “未获得回复” blocks
+- A secondary coupling quirk is present but does not look like the main failure:
+  - in the validated Twitter-only run, `zep_tools.py` loaded `reddit_profiles.json` first
+  - however, spot checks show that the relevant `agent_id` positions and usernames still align with `twitter_profiles.csv`
+  - so profile-source preference may affect role richness, but it does not explain the dropped interview answers
 
 ## Runtime Validation Snapshot
 
@@ -106,7 +153,38 @@ next_action: run one full report generation against a warm simulation and inspec
   - `twitter/actions.jsonl` is still not produced by the single-platform script path in this validation
   - `env_status.json` is still too sparse for the richer backend status view
   - the earlier probe-style validation process still explains the previous `SIGTERM` teardown, and earlier IPC timeouts now look more like readiness/timing artifacts than a stable command-loop failure
-  - no full report generation run has yet been validated end-to-end under a warm live simulation, so actual `ReportAgent` tool-choice behavior is still inferred from source rather than observed in logs
+  - one full report generation run has now been validated end-to-end under a warm live simulation
+  - actual `ReportAgent` tool-choice behavior is now observed, not just inferred from source
+  - the remaining uncertainty is not whether report generation works, but why live interviews remain low-yield in the validated run
+
+## Full Report Run Snapshot
+
+- Report ID: `report_7e34e64b29aa`
+- Total logged runtime: about 316.24 seconds
+- Final artifacts written:
+  - `meta.json`
+  - `outline.json`
+  - `progress.json`
+  - `section_01.md`
+  - `section_02.md`
+  - `section_03.md`
+  - `full_report.md`
+  - `agent_log.jsonl`
+  - `console_log.txt`
+- Observed execution truth from `agent_log.jsonl`:
+  - section 1 total: about 104.5 seconds
+  - section 2 total: about 110.1 seconds
+  - section 3 total: about 92.9 seconds
+  - graph-search tools were consistently fast
+  - `interview_agents` was consistently the long pole
+- Observed artifact truth mismatch:
+  - `agent_log.jsonl` and backend logs advanced in real time
+  - `progress.json` stayed at 66% / section 3 pending during the long interview wait
+  - it only caught up when the report completed
+- Observed interview-contract mismatch:
+  - batch response files such as `126b6d85-32d3-4716-bbca-3048ced937fa.json` and `1cb7f825-14fc-414c-a195-334ff23b3f4d.json` contain rich answers under bare agent-id keys
+  - manual single interview responses also return non-empty text directly
+  - the report adapter currently expects dual-platform keys and therefore loses those answers in single-platform runs
 
 ## Current Runtime Gap
 
@@ -119,6 +197,25 @@ next_action: run one full report generation against a warm simulation and inspec
   - `ReportAgent` can ask for live interviews
   - the outer report API does not guarantee those interviews are ready at report start time
   - so the richest evidence path is available only on a best-effort basis
+- The newest report-specific gap is subtler:
+  - in a fully ready environment, `interview_agents` can still look empty at the report layer
+  - but the leading explanation is now adapter-side decoding loss, not necessarily simulation-side silence
+  - report orchestration currently treats that decoded emptiness as successful progress rather than as a schema error
+- There is also a broader session gap:
+  - durable artifacts exist for simulations and reports
+  - task progress is in-memory only
+  - chat continuity is client-owned only
+  - there is no single resumable “research session” object
+- Code reading now sharpens that gap into a provisional restart matrix:
+  - `simulation_id` remains a durable reload handle because `SimulationManager` reloads `state.json`
+  - `report_id` remains a durable reload handle because `ReportManager` rebuilds reports from folders on disk
+  - `task_id` dies on backend restart because `TaskManager` stores tasks only in memory
+  - chat survives only reconstructively via saved report artifacts plus client-resubmitted history
+- A real mid-report restart probe now validates most of that matrix:
+  - interrupted `report_id` artifacts survived and were readable after restart
+  - old `task_id` immediately failed with `任务不存在`
+  - the interrupted report still exposed saved outline and stale progress
+  - but by-simulation lookup drifted to another older failed report
 
 ## Concrete Alignment Targets
 
@@ -135,10 +232,32 @@ next_action: run one full report generation against a warm simulation and inspec
   - simulation process launched
   - simulation interview-ready
 - `app/services/report_agent.py` assumes `interview_agents` is just another optional tool inside the section loop, so readiness failure is currently handled at tool-call time rather than by outer orchestration.
+- `app/services/zep_tools.py` always parses interview batch results as if they came from the dual-platform runner:
+  - expects keys like `twitter_0` and `reddit_0`
+  - does not fall back to bare single-platform keys like `0`
+- `scripts/run_twitter_simulation.py` and `scripts/run_reddit_simulation.py` return batch results keyed by bare agent IDs, while `scripts/run_parallel_simulation.py` returns the prefixed keys the report adapter expects.
+- `app/services/zep_tools.py` currently prefers `reddit_profiles.json` over `twitter_profiles.csv` when both exist. In the validated simulation that did not break agent targeting because indices and usernames aligned across both exports, but it is still a hidden coupling worth documenting.
+- `app/api/report.py` starts report generation in a daemon thread and ties UI polling to `TaskManager`, which means:
+  - `report_id` is durable
+  - `task_id` is not durable
+  - unfinished report work is not resumable from an in-memory checkpoint
+- This also implies a likely user-visible restart failure mode:
+  - a partially generated report may still exist on disk
+  - the original polling handle no longer resolves
+  - there is no explicit API state saying "generation died but artifacts survived"
+- The probe adds a second user-visible failure mode:
+  - the partial report exists and is directly readable by `report_id`
+  - but `by-simulation`, `check`, and `chat` may choose a different report entirely
+- Code reading explains why:
+  - `ReportManager.get_report_by_simulation()` is first-match over `os.listdir()`
+  - `_get_report_id_for_simulation()` in the history API is latest-created by `created_at`
+  - the frontend therefore mixes two incompatible report-selection semantics
 
 ## Inferences
 
-- The best next research pass is likely a live run, not more static reading.
+- The best next research pass is now split into two focused questions:
+  - contract normalization for live interviews
+  - restart/resume behavior across simulation, report, task, and chat sessions
 - If there is a single area most worth stress-testing, it is the boundary between the report agent and the live OASIS interview path.
 - MiroFish is more interesting as a prediction pipeline with an embedded research agent than as a generic multi-agent framework.
 - The deepest architectural insight is that report generation is not downstream decoration; it is where graph memory and live simulation finally get fused into one reasoning loop.
@@ -154,10 +273,25 @@ next_action: run one full report generation against a warm simulation and inspec
   - graph retrieval, which is available once graph build succeeds
   - live simulation interviews, which depend on runtime readiness and warm-up
 - The current system is better at recovering from evidence-format errors than from evidence-availability timing issues.
+- The current system is also better at recovering from integration bugs than at recognizing them. It can finish the report cleanly after mis-decoded interviews, but it does not yet distinguish “agent gave no answer” from “tool adapter dropped the answer”.
+- The current system is also better at recovering via artifacts than at resuming via live session state. It can reconstruct outputs from disk more easily than it can continue a partially running analytical session.
+- Put differently:
+  - output continuity is stronger than session continuity
+  - inspection continuity is stronger than execution continuity
+- And within inspection continuity:
+  - direct artifact lookup is stronger than simulation-scoped lookup
+- More precisely:
+  - history/report-page navigation is closer to latest-attempt semantics
+  - chat/check/by-simulation are closer to first-match semantics
 
 ## Open Questions
 
 - Do all live simulations end in a wait-for-command state by default, or only the parallel runner?
+- Does the frontend currently have enough signals to treat `report_id` as the real post-restart anchor and `task_id` as a best-effort temporary handle?
+- Should the frontend switch to using `report_id` as the canonical post-restart anchor once report generation has started, instead of continuing to trust simulation-scoped lookup?
+- Should the product explicitly separate:
+  - "resume the latest attempt"
+  - "open the latest successful report"
 - Is the report agent expected to be the primary user-facing assistant after report generation, or just one of several interaction surfaces?
 - Does the team want deeper graph-memory updates during simulation, or is report-time retrieval the intended main path?
 - If the backend restarts during graph build, simulation, or report generation, which exact pieces recover automatically and which must be reconstructed manually?
@@ -165,9 +299,16 @@ next_action: run one full report generation against a warm simulation and inspec
 - Is the missing `twitter/actions.jsonl` support in single-platform mode intentional, unfinished, or a regression relative to `run_parallel_simulation.py`?
 - What objective signal should the backend expose for “IPC ready” in single-platform mode, beyond the coarse `env_alive` file?
 - Should the single-platform scripts reuse the shared IPC server abstraction and richer status schema from the parallel path to reduce drift?
-- In a real report run, how often does the section loop choose `interview_agents`?
+- In a real report run, how often does the section loop choose `interview_agents` once the adapter can actually see single-platform replies?
 - If a section chooses `interview_agents` too early, does the report recover by switching tools, or does it simply absorb the failure text as weak evidence?
 - Does the 3-tool minimum create materially better sections, or mainly increase cost and latency for short sections?
+- Should the single-platform runner normalize its batch payloads to match the public API doc and the parallel runner, or should `zep_tools.py` learn both formats?
+- Does the `reddit_profiles.json` preference inside `zep_tools.py` ever become harmful when Reddit and Twitter profile exports diverge in ordering or membership?
+- Which session layer should be treated as canonical after a backend restart:
+  - simulation artifacts
+  - report artifacts
+  - in-memory tasks
+  - client-owned chat history
 
 ## Improvement Ideas
 
@@ -179,6 +320,7 @@ next_action: run one full report generation against a warm simulation and inspec
 - Bring `run_twitter_simulation.py` and `run_reddit_simulation.py` into parity with `run_parallel_simulation.py` for action-log emission, or teach `SimulationRunner` to derive progress from the single-platform DB/log outputs.
 - Add a dedicated long-lived validation recipe for IPC/wait-command testing so research probes do not accidentally kill the child process on exit.
 - Align single-platform `env_status.json` with the richer shape expected by `SimulationRunner.get_env_status_detail()`.
+- Add a dedicated `session-management.md` view when session ownership becomes important to understanding runtime behavior.
 - Consider replacing the ad-hoc single-platform IPC handler with the shared `simulation_ipc.py` contract to eliminate drift.
 - Add an explicit readiness marker for “wait-command loop entered and first IPC poll completed” so callers do not have to infer readiness from timing.
 - Add a report-generation preflight that distinguishes graph-ready from interview-ready, or expose tool availability to `ReportAgent` so it can choose graph-only paths intentionally when live interviews are not yet ready.

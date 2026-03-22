@@ -13,6 +13,7 @@ Additional files are optional and should only be created when the research depth
 - `llm-orchestration.md`
 - `context-management.md`
 - `deep-research-mode.md`
+- `session-management.md`
 - `prompts-analysis.md`
 - `notes.md`
 
@@ -22,7 +23,7 @@ Additional files are optional and should only be created when the research depth
 | --- | --- | --- |
 | BettaFish | first-pass complete | validate forum loop and report-generation behavior with one live run |
 | DeepSearchAgent-Demo | first-pass complete | validate live run and compare with other research agents |
-| MiroFish | partially live-validated | graph/build/prepare plus single-platform interview/close-env are validated; next run one full ReportAgent pass against a warm simulation and inspect readiness/log drift inside the report loop |
+| MiroFish | partially live-validated | one full ReportAgent live run and one mid-report restart probe are done; next compare and unify report-selection policies because history uses latest-created while by-simulation/chat still use first-match semantics |
 | Multi-Agent-Data-Analyst | first-pass complete | validate one SQL and one DataFrame run and confirm README/runtime alignment |
 | MultiAgent-Data-Analyst | first-pass complete | pick the canonical entry path and repair memory/model gaps before live run |
 | MODULAR-RAG-MCP-SERVER | partially live-validated | compare its file-backed modular RAG and MCP pattern against LightRAG and deep-rag; only revisit runtime if a clean Chroma-backed query is needed |

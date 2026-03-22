@@ -3,8 +3,8 @@ project: deep-rag
 source_path: examples/deep-rag
 status: in-progress
 confidence: medium
-last_updated: 2026-03-21
-next_action: compare this knowledge-map navigation pattern with graph-heavy RAG systems like LightRAG, and only return to real-provider validation if it becomes necessary later
+last_updated: 2026-03-22
+next_action: if needed, turn the four review-grade candidates into formal review findings or a concrete patch plan, instead of continuing broad exploratory analysis
 ---
 
 # deep-rag
@@ -56,7 +56,7 @@ The main unresolved risks are oversized retrieval payloads, config/docs drift, a
 
 ## Next Action
 
-- Finish the static contract audit between code and docs, especially whether README and frontend copy should be corrected to reflect markdown-only retrieval, preprocessing dependence, and backend-driven provider/model selection.
+- Turn the now-stable review-grade candidates into a proper review pass or patch plan.
 
 ## Research Notes
 
@@ -109,6 +109,10 @@ The main unresolved risks are oversized retrieval payloads, config/docs drift, a
 - The frontend config panel therefore assumes a localhost backend even though the rest of the frontend is written against a configurable `VITE_API_BASE_URL`.
 - The shipped frontend stream parser buffers ReAct content until it sees `<|Final Answer|>`, extracts only the text after that tag, and resets buffered thought/action text after `tool_results`.
 - `frontend/src/components/ChatMessage.tsx` can render and copy full tool results, and only truncates on-screen display after 500000 characters.
+- `backend/main.py` saves `.env`, calls `load_dotenv(override=True)`, and then reassigns `settings = Settings()` only inside `backend.main`.
+- `backend/knowledge_base.py` constructs `knowledge_base = KnowledgeBase()` as a module-level singleton at import time from `backend.config.settings`.
+- `backend/llm_provider.py` reads `settings.temperature` and `settings.max_tokens` from `backend.config.settings` when constructing provider payloads.
+- The frontend config panel tells the user that configuration is applied immediately after save.
 
 ## Inferences
 
@@ -130,6 +134,11 @@ The main unresolved risks are oversized retrieval payloads, config/docs drift, a
 - The effective runtime surface is narrower than the declared product surface:
   path configuration, provider/model selection, and frontend deployment assumptions all drift from the README's more flexible framing.
 - Retrieval semantics are narrower than the top-level README framing suggests, because the preprocessing and directory traversal paths are markdown-centric.
+- The config editor's hot-reload story appears only partially true by static inspection: rebinding `settings` inside `backend.main` does not recreate imported singletons or refresh other modules that still reference `backend.config.settings`.
+- This likely creates a split config surface where some values refresh immediately:
+  provider lists and provider-specific credentials read through `os.environ`
+  while others risk staying stale until process restart:
+  knowledge-base paths, summary paths, temperature, and max-token settings
 
 ## Open Questions
 
@@ -143,10 +152,25 @@ The main unresolved risks are oversized retrieval payloads, config/docs drift, a
 - Should the config panel use the same API base URL abstraction as the rest of the frontend?
 - Should the README explicitly document that preprocessing and bulk retrieval are markdown-oriented rather than file-type-agnostic?
 - Should the summary generator stop printing full source content into logs during summarization?
+- Should `/api/config` update shared runtime state in one place and recreate settings-dependent singletons so "save and apply" actually matches behavior?
+
+## Improvement Ideas
+
+- Gate or remove the raw `.env` read/write surface from the default app path, or at minimum restrict it to trusted local-only usage.
+- Centralize config hot reload in one shared runtime settings layer and recreate settings-dependent singletons after a save.
+- Make function-mode tool-call accumulation either support multiple tool calls correctly or explicitly reject multi-call streams.
+- Unify frontend config requests behind the shared `API_BASE_URL` abstraction so deployment assumptions are consistent.
+
+## Review-Grade Candidates
+
+- High: `backend/main.py` exposes unauthenticated `.env` read/write endpoints at `/api/config`, while the app also enables wildcard CORS and the default launcher binds the backend to `0.0.0.0`.
+- High: config hot reload is only partially applied because `backend/main.py` rebinds its own `settings`, but `backend/knowledge_base.py` and `backend/llm_provider.py` still depend on earlier module-level state.
+- Medium: function-mode streaming currently accumulates only one tool call correctly; multiple tool calls in one assistant turn can be merged into a single corrupted payload.
+- Medium: `frontend/src/components/ConfigPanel.tsx` hardcodes `http://localhost:8000`, so the config editor can break whenever the frontend is pointed at a non-local backend through `VITE_API_BASE_URL`.
 
 ## Blocked or Low-Confidence Record
 
 - Files Checked: `backend/main.py`, `backend/prompts.py`, `backend/react_handler.py`, `backend/knowledge_base.py`, `backend/llm_provider.py`, `backend/config.py`, `backend/models.py`, `Knowledge-Base-File-Summary/generate.py`, `Knowledge-Base-File-Summary/Summary Prompt.md`, `frontend/src/App.tsx`, `frontend/src/api.ts`, `frontend/src/types.ts`, `README.md`, `.env.example`
 - Current Blocker: real third-party provider validation is still blocked by placeholder API credentials in the shipped `.env`, even though end-to-end chat has now been validated with a local compatible stub
-- Working Hypothesis: this is a knowledge-map-driven retrieval agent with working dual-mode orchestration, and the main remaining risks are oversized retrieval payloads, preprocessing/config drift, and frontend/backend contract friction rather than failure to boot
-- Resume From: continue the static audit around preprocessing, docs drift, and frontend/backend contract mismatches, then only return to real-provider validation if it becomes necessary later
+- Working Hypothesis: this is a knowledge-map-driven retrieval agent with working dual-mode orchestration, and the main remaining risks are oversized retrieval payloads, preprocessing/config drift, partial hot-reload semantics, and frontend/backend contract friction rather than failure to boot
+- Resume From: continue the static audit around config propagation, docs drift, and frontend/backend contract mismatches, then only return to real-provider validation if it becomes necessary later

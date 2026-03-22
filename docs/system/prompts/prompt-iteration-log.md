@@ -319,6 +319,10 @@ The first goal is not maximum sophistication. The first goal is to create a stab
 - for systems that support both native tool calls and ReAct fallback, run the same query through both modes because runtime cleanliness can diverge sharply even when the retrieval contract is shared
 - distinguish raw transport behavior from rendered UX behavior, because a frontend may clean or hide protocol markers that still exist in the backend stream
 - when a repository includes both markdown prompt docs and code-embedded prompt strings, verify which one is actually executed before treating the markdown file as a source of truth
+- when auditing in-app config editors, trace whether a save updates one local settings handle or the actual shared runtime state, because module-level singletons and imported settings objects can silently preserve stale configuration
+- in retrieval comparisons, separate substrate shape from retrieval-control locus, because two systems can both be "local RAG" while one lets the model choose scope at runtime and the other encodes scope choice in retrieval modes and storage structure
+- compare fallback carriers, not just primary retrieval paths: what still produces context when the preferred branch weakens often explains a system's real resilience profile better than the headline architecture does
+- once a project-level observation has direct user or security impact, a precise code path, and little dependence on product interpretation, promote it from a research note to a review-grade candidate instead of leaving it as vague architectural drift
 
 ### Next hypothesis
 
@@ -656,6 +660,355 @@ The first goal is not maximum sophistication. The first goal is to create a stab
 ### Next hypothesis
 
 - future RAG comparisons may benefit from a third dedicated document on serving-surface complexity once more API-plus-WebUI-plus-tooling platforms are analyzed
+
+## Version: v1.12
+
+- Date: 2026-03-22
+- Scope: separating retrieval topology from serving-surface complexity in RAG comparisons
+- Status: active
+
+### What changed
+
+- added a dedicated serving-surface comparison layer for `deep-rag`, `MODULAR-RAG-MCP-SERVER`, and `LightRAG`
+- stopped treating "how retrieval works" and "how users/programs touch the system" as one combined comparison question
+
+### What improved
+
+- comparison conclusions are easier to reuse because a project can now be strong in retrieval topology but weak in default serving shape, or vice versa
+- app-coupled systems, protocol-first systems, and platform-scale servers are easier to distinguish cleanly
+
+### What got worse
+
+- comparison space is now slightly more fragmented across documents
+- there is one more taxonomy choice to keep consistent across future RAG analyses
+
+### Evidence from actual use
+
+- `deep-rag`, `MODULAR-RAG-MCP-SERVER`, and `LightRAG` all had meaningful serving layers, but those layers failed in very different ways:
+  frontend/backend contract drift, launcher/protocol drift, and platform-surface complexity
+
+### Modification learnings
+
+- for retrieval systems, the serving surface is often an independent design dimension rather than a simple wrapper around the retrieval core
+- "best retrieval architecture" and "best default user-facing surface" should not be collapsed into one judgment
+
+### Testing learnings
+
+- runtime validation should name which serving surface was actually tested:
+  backend app, MCP wire protocol, object-level library path, WebUI path, or compatibility API
+- this makes partial validation much easier to compare honestly across systems with very different exposure layers
+
+### Next hypothesis
+
+- future comparison work may benefit from a fourth reusable axis for "configuration surface complexity" once more multi-provider or multi-backend systems are analyzed
+
+## Version: v1.13
+
+- Date: 2026-03-22
+- Scope: deeper comparison of prompts, context management, and loop structure for local-knowledge RAG systems
+- Status: active
+
+### What changed
+
+- split the next comparison pass into three separate axes:
+  prompt control, retrieval context, and agent loop shape
+- stopped treating "agenticity" as a single scalar and instead compared who owns iteration, what gets re-injected, and where prompts actually carry control
+
+### What improved
+
+- `deep-rag`, `MODULAR-RAG-MCP-SERVER`, and `LightRAG` are now easier to compare without flattening them into the same kind of RAG
+- prompt-heavy systems, prompt-light service systems, and prompt-layered substrate systems can now be described with cleaner language
+
+### What got worse
+
+- the comparison layer now has more documents, so navigation takes a little more discipline
+- there is slightly more taxonomy overhead in keeping prompt, context, loop, topology, and serving surface distinct
+
+### Evidence from actual use
+
+- a deeper source pass showed that the three systems use prompts very differently:
+  `deep-rag` uses prompts to steer visible retrieval behavior, `MODULAR-RAG-MCP-SERVER` relies much more on code and protocol contracts, and `LightRAG` uses prompts heavily inside internal extraction and answer-building stages
+- the same pass also showed that only `deep-rag` has a truly model-directed retrieval loop at query time; the other two are better described as service-call and pipeline-directed systems
+
+### Modification learnings
+
+- for local-knowledge RAG systems, prompts can serve three different control roles:
+  user-visible loop steering, protocol-light support, or internal substrate shaping
+- context comparison becomes clearer when framed around "what gets re-injected into the next step?" rather than only "what memory exists?"
+
+### Testing learnings
+
+- when comparing loop shapes, inspect the actual break conditions and fallback branches in source before calling something "agentic"
+- when comparing prompt behavior, look at both prompt templates and the code that wraps them, because prompt weight can be hidden in task decomposition rather than in long system prompts
+
+### Next hypothesis
+
+- future comparison work may benefit from a dedicated "configuration-surface complexity" doc, especially for systems like `LightRAG` where provider, storage, and mode combinatorics materially shape runtime behavior
+
+## Version: v1.14
+
+- Date: 2026-03-22
+- Scope: turning multi-document local-RAG comparison work into a reusable design-selection guide
+- Status: active
+
+### What changed
+
+- added a selection-oriented comparison page for local-knowledge RAG systems
+- treated the earlier comparison docs as supporting axes and added one page that answers the practical question:
+  when should someone choose each pattern?
+
+### What improved
+
+- the comparison layer is now useful not only for analysis, but also for design decisions
+- the growing comparison taxonomy is easier to navigate because there is now one decision page that points back to the underlying axes
+
+### What got worse
+
+- there is now a mild risk of repeating conclusions if the selection page and axis pages are not kept aligned
+
+### Evidence from actual use
+
+- once retrieval topology, serving surface, prompt control, context management, and loop structure were separated, the next useful artifact was no longer another axis
+- the next useful artifact was a page that recombined them into direct design heuristics for `deep-rag`, `MODULAR-RAG-MCP-SERVER`, and `LightRAG`
+
+### Modification learnings
+
+- comparison layers eventually need a "decision synthesis" page once enough axes exist
+- otherwise the research becomes rich but awkward to apply when someone needs to make a real architecture choice
+
+### Testing learnings
+
+- selection pages should not invent new evidence; they should only recombine already-supported conclusions from the lower-level comparison docs
+- this keeps the design advice honest and makes later updates easier
+
+### Next hypothesis
+
+- if more local RAG projects are added, this selection page may need to split into separate guides for lightweight file-backed systems, service-oriented retrieval systems, and substrate-heavy retrieval platforms
+
+## Version: v1.15
+
+- Date: 2026-03-22
+- Scope: configuration-surface comparison for local-knowledge RAG systems
+- Status: active
+
+### What changed
+
+- added a dedicated comparison page for configuration surface complexity
+- separated provider/storage/env/runtime-propagation questions from serving-surface and retrieval-topology questions
+
+### What improved
+
+- configuration problems are now easier to discuss precisely instead of being mixed into vague "runtime drift"
+- the design-selection layer now has a clearer operational complement:
+  not just which architecture to choose, but what kind of config burden comes with it
+
+### What got worse
+
+- the comparison taxonomy is still growing, so there is more surface area to keep aligned
+
+### Evidence from actual use
+
+- `deep-rag` showed that a small config surface can still be risky when env-name drift and partial hot-reload semantics exist
+- `MODULAR-RAG-MCP-SERVER` showed that a typed settings model is helpful, but bootstrap drift can still dominate the real user experience
+- `LightRAG` showed that a powerful config matrix creates a different class of risk: not drift, but combination complexity
+
+### Modification learnings
+
+- configuration surface deserves its own comparison axis once a project family includes both app-shaped systems and platform-shaped systems
+- "how much config exists?" is much less useful than:
+  where config lives, how it propagates, and how easy it is to trust
+
+### Testing learnings
+
+- config validation should distinguish three questions:
+  are names aligned, do runtime updates propagate, and is the chosen combination actually healthy
+- this makes config analysis more actionable than a generic "docs drift" note
+
+### Next hypothesis
+
+- if more platform-scale projects are added, the next useful split may be between "configuration breadth" and "configuration trustworthiness"
+
+## Version: v1.15
+
+- Date: 2026-03-22
+- Scope: separating research observations from review-grade findings during static analysis
+- Status: active
+
+### What changed
+
+- added an explicit promotion boundary for when a static observation should stop living only as research prose and start being treated as a review-grade candidate
+- started ranking candidate findings by severity inside project notes before turning them into formal review output
+
+### What improved
+
+- static analysis rounds can now stay exploratory without losing the ability to surface concrete defects cleanly later
+- project pages can keep architecture insight and code-review risk separate, which makes the research docs easier to trust and easier to continue
+
+### What got worse
+
+- the research workflow now asks for one more judgment call:
+  whether something is merely notable architecture drift or already concrete enough to be treated as a defect candidate
+
+### Evidence from actual use
+
+- the `deep-rag` pass surfaced several issues that were no longer just design observations:
+  unauthenticated `.env` mutation, partial hot reload, single-call-only tool aggregation, and a hardcoded config endpoint
+- leaving those mixed into generic research prose made the notes harder to scan and made severity harder to communicate
+
+### Modification learnings
+
+- a static observation is usually ready to become a review-grade candidate when it has:
+  a precise code path
+  direct user, security, or deployment impact
+  and little remaining ambiguity about whether the behavior is intentional
+- severity ordering is worth doing inside the research notes first, because it forces the boundary between "interesting" and "important"
+
+### Testing learnings
+
+- when doing static-only rounds, verify candidate findings against exact line-level evidence before promoting them
+- keep the final step optional:
+  research docs can hold severity-ranked candidates without forcing a full code review pass every time
+
+### Next hypothesis
+
+- future project templates may benefit from a dedicated `Review-Grade Candidates` section so this boundary stays consistent across studies
+
+## Version: v1.16
+
+- Date: 2026-03-22
+- Scope: separating prompt, context, loop, and session comparisons for local-knowledge systems
+- Status: active
+
+### What changed
+
+- extended the comparison layer so prompt control, context management, agent loop shape, and session management are treated as related but non-identical axes
+- added `rag-skill` as a useful comparison anchor for workflow-governed retrieval behavior
+- added dedicated pages for local-knowledge context management and session management instead of overloading broader state notes
+
+### What improved
+
+- local-knowledge systems can now be compared more precisely without flattening everything into generic "RAG architecture"
+- the research language is clearer about whether continuity lives in docs, a chat client, request traces, or a persistent substrate
+
+### What got worse
+
+- the comparison layer now has more overlap risk if prompt, context, loop, session, and state docs are not kept distinct
+
+### Evidence from actual use
+
+- `rag-skill`, `deep-rag`, `MODULAR-RAG-MCP-SERVER`, and `LightRAG` all deal with continuity and control very differently even though they can all be casually described as local-knowledge retrieval systems
+- earlier comparison pages captured parts of that story, but they still mixed session continuity into broader state or context language
+
+### Modification learnings
+
+- `state`, `context`, `loop`, and `session` should not be collapsed into one axis
+- a lightweight skill protocol like `rag-skill` is a strong contrast case because it shows continuity governed by instructions rather than by runtime objects
+
+### Testing learnings
+
+- when writing comparison pages, check whether each claimed distinction can be tied back to one concrete owner:
+  prompt docs
+  backend loop
+  client replay
+  request trace
+  or persistent substrate
+
+### Next hypothesis
+
+- future local-agent comparisons may also need a dedicated axis for human steering versus autonomous continuity once more skill-driven systems are added
+
+## Version: v1.17
+
+- Date: 2026-03-22
+- Scope: adding a steering-versus-continuity lens to local-knowledge comparisons
+- Status: active
+
+### What changed
+
+- added a dedicated comparison axis for `human steering vs autonomous continuity`
+- expanded the local-RAG selection guide so it now synthesizes not only retrieval topology, but also continuity ownership and session location
+
+### What improved
+
+- the comparison layer can now distinguish systems that are "agentic" because they keep working within one request from systems that are "continuous" because they preserve substrate state across many operations
+- `rag-skill`, `deep-rag`, `MODULAR-RAG-MCP-SERVER`, and `LightRAG` can now be compared without pretending they all solve autonomy in the same way
+
+### What got worse
+
+- there is now one more comparison axis to maintain, and it sits close to session and loop analysis if the page boundaries are not kept clean
+
+### Evidence from actual use
+
+- the previous round showed that `rag-skill` is continuity-heavy but human-steered, `deep-rag` is more autonomous inside a request, `MODULAR-RAG-MCP-SERVER` is conservative and caller-steered, and `LightRAG` is persistent at the substrate layer rather than the chat-loop layer
+- those differences mattered for selection, but they were still awkward to express using only prompt, context, loop, and session pages
+
+### Modification learnings
+
+- "who steers?" and "what persists?" are separate questions
+- some systems reduce operator burden by automating loop decisions, while others reduce operator burden by preserving substrate readiness; those should not be treated as the same kind of autonomy
+
+### Testing learnings
+
+- when a comparison starts using the word `agentic`, verify whether it refers to:
+  bounded in-request continuation
+  cross-request persistence
+  or reduced human orchestration burden
+
+### Next hypothesis
+
+- future comparison work may need to distinguish `autonomous continuation` from `autonomous planning` once more true research-agent systems are added
+
+## Version: v1.18
+
+- Date: 2026-03-22
+- Scope: separating planning from continuation and resume-from-artifacts from resume-from-runtime
+- Status: active
+
+### What changed
+
+- added dedicated comparison pages for `autonomous continuation vs planning` and `artifact vs runtime resume`
+- added compact local-knowledge reference cards so the comparison layer has a lightweight scan surface in addition to axis pages
+
+### What improved
+
+- local-knowledge systems can now be compared without treating every bounded loop as a planner
+- resume analysis is clearer because it now distinguishes artifact-first recovery from runtime-sensitive interactive continuity
+
+### What got worse
+
+- the comparison stack is denser, so navigation quality matters more than before
+
+### Evidence from actual use
+
+- `deep-rag` is meaningfully more autonomous than `rag-skill` inside one request, but it still is not a planning-heavy system
+- `rag-skill` and `MODULAR-RAG-MCP-SERVER` both resume well from artifacts, but for very different reasons:
+  one is workflow-driven and one is service-driven
+- `LightRAG` preserves more capability across time, but much of that continuity comes from substrate health rather than chat-like runtime state
+
+### Modification learnings
+
+- bounded continuation, explicit planning, and persistence-backed continuity are three different properties
+- "resumable" should always be qualified:
+  resumable from artifacts
+  resumable from client replay
+  or resumable from a persistent runtime substrate
+
+### Testing learnings
+
+- when comparing autonomy claims, verify whether the system:
+  chooses the next step
+  decomposes the task
+  or simply preserves enough state to continue later
+
+### Next hypothesis
+
+- future comparison work may benefit from one final meta-index that groups pages by question:
+  prompts
+  context
+  loop
+  session
+  continuity
+  and selection
 
 ## Iteration Template
 

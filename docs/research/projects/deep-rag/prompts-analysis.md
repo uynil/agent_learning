@@ -3,7 +3,7 @@ project: deep-rag
 source_path: examples/deep-rag
 status: in-progress
 confidence: medium
-last_updated: 2026-03-21
+last_updated: 2026-03-22
 next_action: compare executed prompt sources against prompt reference artifacts and frontend parsing assumptions, without adding more live runs
 ---
 
