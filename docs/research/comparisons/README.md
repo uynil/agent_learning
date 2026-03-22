@@ -14,5 +14,8 @@ Current starter comparison docs:
 - `deep-research-patterns.md`
 - `state-management-patterns.md`
 - `tool-use-patterns.md`
+- `file-backed-retrieval-patterns.md`
+- `retrieval-topology-patterns.md`
+- `multi-agent-data-analyst-variants.md`
 
 Each comparison doc should focus on one dimension and avoid mixing too many themes.
